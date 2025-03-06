@@ -1,0 +1,38 @@
+CREATE TABLE productos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    precio DECIMAL(10, 2) NOT NULL
+);
+
+
+CREATE TABLE usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    contrasena VARCHAR(100) NOT NULL
+);
+
+
+
+pruebas 
+
+http://127.0.0.1:5000/productos              get
+
+http://127.0.0.1:5000/nuevo_producto          post
+
+{
+    "nombre": "laptop",
+    "precio": 25.99
+}
+
+
+http://127.0.0.1:5000/actualizar_producto/1       put
+
+{
+    "nombre": "lapTop",
+    "precio": 25000000.99
+}
+
+
+
+http://127.0.0.1:5000/eliminar_producto/1

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consumir API de Usuarios</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Crear Nuevo Usuario</h2>
+        <form id="crear-usuario-form">
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" class="form-control" id="nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="text" class="form-control" id="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="contrasena">Contraseña:</label>
+                <input type="text" class="form-control" id="contrasena" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Crear Usuario</button>
+            <a href="index.html" class="btn btn-info">volver</a>
+        </form>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Función para cargar los productos desde la API
+            // Cargar productos al cargar la página
+
+            // Manejar la creación de un nuevo producto
+            document.getElementById('crear-usuario-form').addEventListener('submit', function(event) {
+                event.preventDefault();
+                const nombre = document.getElementById('nombre').value;
+                const email = document.getElementById('email').value;
+                const contrasena = document.getElementById('contrasena').value;
+                fetch('http://127.0.0.1:5000/nuevo_usuario', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({nombre: nombre, email: email, contrasena: contrasena})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.mensaje);
+                    window.location.href = 'index.html';
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+
+
+
+
+    </script>
+</body>
+</html>

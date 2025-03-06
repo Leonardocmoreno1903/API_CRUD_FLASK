@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consumir API de usuarios</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <a href="crear.html"  class="btn btn-success">Crear Nuevo Usuario</a>
+        <hr>
+        <h2>Listado de usuarios</h2>
+        <table id="usuarios-table" class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>email</th>
+                    <th>contraseña</th>
+                    <th colspan="">opcion actualizar</th>
+                    <th colspan="">opcion eliminar</th>
+                </tr>
+            </thead>
+            <tbody id="usuarios-body">
+            </tbody>
+        </table>
+
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Función para cargar los productos desde la API
+            // Cargar productos al cargar la página
+
+            function cargarUsuarios() {
+                fetch('http://127.0.0.1:5000/usuarios')
+                    .then(response => response.json())
+                    .then(data => {
+                        const usuariosBody = document.getElementById('usuarios-body');
+                        usuariosBody.innerHTML = '';
+                        data.forEach(usuario => {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td>${usuario[0]}</td>
+                                <td>${usuario[1]}</td>
+                                <td>$${usuario[2]}</td>
+                                <td>$${usuario[3]}</td>
+                                <td><button class="btn btn-primary" onclick="actualizarUsuario(${usuario[0]})">Actualizar</button></td>
+                                <td><button class="btn btn-danger" onclick="eliminarUsuario(${usuario[0]})">Eliminar</button></td>
+                            `;
+                            usuariosBody.appendChild(tr);
+                        });
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+
+            
+            cargarUsuarios();
+        });
+
+
+        function eliminarUsuario(id) {
+                fetch(`http://127.0.0.1:5000/eliminar_usuario/${id}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.mensaje);
+                    window.location.href = 'index.html';
+                })
+                .catch(error => console.error('Error:', error));
+            }
+
+            function actualizarUsuario(id) {
+                // Redirigir a actualizar.html con el ID del producto como parámetro
+                window.location.href = `actualizar.html?id=${id}`;
+            }
+
+      
+    </script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consumir API de Productos</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Actualizar Usuario</h2>
+        <form id="actualizar-usuario-form">
+                <label type="hidden" id="id">
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" class="form-control" id="nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="text" class="form-control" id="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="contrasena">Contraseña:</label>
+                <input type="text" class="form-control" id="contrasena" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Actualizar Usuario</button>
+            <a href="index.html" class="btn btn-info">volver</a>
+        </form>
+
+    </div>
+
+    <script>
+        // Obtener el ID del producto de la URL
+        const idUsuario = new URLSearchParams(window.location.search).get('id');
+
+
+        // mostrar el id en usuario en consola en el navegador
+        console.log(idUsuario)
+
+        // Cargar los datos del producto al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch(`http://127.0.0.1:5000/usuario/${idUsuario}`)
+
+
+            .then(response => response.json())
+            .then(data => {
+
+
+                //mostrar la informacion del usuario en consola
+                console.log(data);
+
+                document.getElementById('id').value = data[0];;
+                document.getElementById('nombre').value = data[1];
+                document.getElementById('email').value = data[2];
+                document.getElementById('contrasena').value = data[3];
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+
+          // Manejar el envío del formulario para actualizar el producto
+        document.getElementById('actualizar-usuario-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const id = document.getElementById('id').value;
+        const nombre = document.getElementById('nombre').value;
+        const email = document.getElementById('email').value;
+        const contrasena = document.getElementById('contrasena').value;
+
+        console.log(id)
+        console.log(nombre)
+        console.log(email)
+        console.log(contrasena)
+
+        fetch(`http://127.0.0.1:5000/actualizar_usuario/${id}`, {
+            method: 'PUT',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ nombre, email, contrasena })
+        })
+            .then(response => response.json())
+            .then(data => {
+            alert(data.mensaje);
+            // Redirigir al usuario a la página principal (index.html)
+            window.location.href = 'index.html';
+            })
+            .catch(error => console.error('Error:', error));
+        });  
+
+        
+    </script>
+</body>
+</html>
