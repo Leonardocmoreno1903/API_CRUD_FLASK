@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--a continuacion cambio el titulo del documento html-->
+    <title>Consumir API de Productos</title>
+    <!--a continuacion coloco la linea de Bootstrap que me va a traer los estilos del frontend-->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!--debo tener en cuenta que Bootstrap funciona con contenedores -->
+    <!--a continuacion declaro un contendor que me va a almacenar el boton crear nuevo producto -->
+    <!--y establece un ancho máximo y centra el contenido. La clase adicional "mt-5" -->
+    <!--agrega margen en la parte superior del contenedor para separarlo de otros elementos en la página -->
+    <div class="container mt-5">
+    <!--a continuacion creamos el boton que hace referencia al documento crear.html a traves de la funcion href-->
+    <!--ahora en bootstrap selecciono la clase de boton q voy a utilizar-->
+    <!--ojo solo selecciono la clase y la pego y despues le coloco el nombre al boton-->
+        <a href="crear.html"  class="btn btn-success">Crear Nuevo Producto</a>
+
+        
+        
+        <hr> <!--este elemento crea una linea horizontal -->
+    <!--creamos un titulo-->
+        <h2>Listado de Productos</h2>
+    <!--a continuacion creamos una tabla para que se vea ordenado para eso llamamos la clase table-->
+    <!--y tambien colocamos un id de la tabla en este caso productos-table-->
+        <table id="productos-table" class="table">
+            <thead> <!--define la seccion del encabezado de la tabla-->
+                <tr> <!--define una fila de la tabla-->
+                    <th>ID</th> <!--definimos los encabezados de las columnas y va relacionado a los campos de la tabla-->
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th colspan="">opcion</th> <!--este encabezado utiliza el colspan y especifica cuantas columnas debe abarcar esta celda -->
+                </tr>
+            </thead>
+            <tbody id="productos-body"> <!--esta linea define la seccion de cuerpo de la tabla-->
+
+            </tbody>
+        </table>
+        <a href="../index.html" class="btn btn-info">volver</a>
+        
+    </div>
+<!--ahora empezamos a incluir codigo de javascript-->
+    <script> 
+        document.addEventListener('DOMContentLoaded', function() {
+            // Función para cargar los productos desde la API
+            // Cargar productos al cargar la página
+            //a continuacion creamos la funcion cargar productos
+            function cargarProductos() { 
+                fetch('http://127.0.0.1:5000/productos') //esta linea me permite hacer una solicitud GET a la url y obtener productos en formato Json
+                //para ello utilizo el puerto del servidor local, el puerto y 
+                    .then(response => response.json()) //este metodo convierte la respuesta de la solicitud en objeto json
+                    .then(data => {//este metodo recibe los datos json
+                        const productosBody = document.getElementById('productos-body'); //esta linea obtiene el elemento de la tabla con el id donde se van a mostrar los productos
+                        productosBody.innerHTML = ''; // aca en esta linea le estoy diciendo que inserte html donde yo le diga
+                        data.forEach(producto => { //creo un foreach el cual se parece mucho al for de python, este metodo crea el rango automaticamente
+                            //al saber que rango trae inicio a crear las columnas con el tr, debo tner en cuenta que debo crear un tr por cada elemento que viene de la base de datos
+                            //este tr se lo inserto al archivo html y empiezo producto en la posicion 0, producto en la posicion 1, etc.
+                            //depende de los campos e inicia en cero
+                            //adicionalmente a eso le creo dos botones q tienen eventos de un clic
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td>${producto[0]}</td>
+                                <td>${producto[1]}</td>
+                                <td>${producto[2]}</td>
+                                <td><button class="btn btn-primary" onclick="actualizarProducto(${producto[0]})">Actualizar</button></td>
+                                <td><button class="btn btn-danger" onclick="eliminarProducto(${producto[0]})">Eliminar</button></td>
+                            `;
+                            //ahora le voy a decir que al producto body agregueme el hijo tr, en otras palabras cuando llegue informacion agregela a la tabla
+                            productosBody.appendChild(tr); 
+                        });
+                    })
+                    //ahora si hay algun error arrojemelo en consola para saber que hay detras
+                    .catch(error => console.error('Error:', error));
+            }
+            //ahora le coy a decir q cada vez que se ejecute la pagina cargue los productos
+            cargarProductos();
+        });
+
+        //ahora voy a crear la funcion eliminar producto
+        function eliminarProducto(id) {
+            //nuevamente creo la conexion, envio el id y utilizo el metodo DELETE
+                fetch(`http://127.0.0.1:5000/eliminar_producto/${id}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json()) //este metodo convierte la respuesta de la solicitud en objeto json
+                .then(data => { //este metodo recibe los datos json
+                    alert(data.mensaje); //arrojeme un mensaje de eliminado 
+                    window.location.href = 'index.html'; // y redirijame al index nuevamente
+                })
+                //ahora si hay algun error arrojemelo en consola para saber que hay detras
+                .catch(error => console.error('Error:', error));
+            }
+
+            function actualizarProducto(id) {
+                // Redirigir a actualizar.html con el ID del producto como parámetro
+                window.location.href = `actualizar.html?id=${id}`;
+            }
+
+      
+    </script>
+</body>
+</html>

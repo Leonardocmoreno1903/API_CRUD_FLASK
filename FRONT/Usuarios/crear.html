@@ -25,7 +25,7 @@
             </div>
 
             <button type="submit" class="btn btn-primary">Crear Usuario</button>
-            <a href="index.html" class="btn btn-info">volver</a>
+            <a href="AdministrarUsuario.html" class="btn btn-info">volver</a>
         </form>
 
     </div>
@@ -51,7 +51,7 @@
                 .then(response => response.json())
                 .then(data => {
                     alert(data.mensaje);
-                    window.location.href = 'index.html';
+                    window.location.href = 'AdministrarUsuario.html';
                 })
                 .catch(error => console.error('Error:', error));
             });

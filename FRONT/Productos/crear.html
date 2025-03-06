@@ -1,0 +1,75 @@
+<!--inicialmente creo un documento html-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consumir API de Productos</title>
+    <!--llamo los elementos de bootstrap-->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!--creo un div -->
+    <div class="container mt-5">
+        <h2>Crear Nuevo Producto</h2>
+        <!--creo un formulario, pero con la condicion que el campo siempre tiene que ser requerido osea q no puede ir vacio (required)-->
+        <form id="crear-producto-form">
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" class="form-control" id="nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="precio">Precio:</label>
+                <input type="number" class="form-control" id="precio" required>
+            </div>
+            <!--y le creo un boton para ejecutar las acciones-->
+            <button type="submit" class="btn btn-primary">Crear Producto</button>
+            <!--y por ultimo creo un boton que me devuelva al index-->
+            <a href="AdministrarProducto.html" class="btn btn-info">volver</a>
+        </form>
+
+    </div>
+<!--ahora empezamos a incluir codigo de javascript-->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Función para cargar los productos desde la API
+            // Cargar productos al cargar la página
+
+            // Manejar la creación de un nuevo producto
+            //en la siguiente linea con un get llamo el id del formulario crear producto form
+            //la captura de los datos se realiza por medio del submit guardo el nombre y el precio
+            document.getElementById('crear-producto-form').addEventListener('submit', function(event) {
+                event.preventDefault();
+                const nombre = document.getElementById('nombre').value;
+                const precio = document.getElementById('precio').value;
+                //a continucion llamo de la api la url de nuevo producto usando el medoto POST
+                
+                fetch('http://127.0.0.1:5000/nuevo_producto', {
+                    method: 'POST',
+                    //y con el header le indico el tipo de archivo va a recibir
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    //le digo que envie un cuerpo tipo json donde nombre es igual a nombre y precio es igual a precio
+                    //nombre es el que trae del api y despues de los dos puntos es la varible que declaramos anteriormente
+                    body: JSON.stringify({nombre: nombre, precio: precio})
+                })
+                //en la siguiente linea le digo que responda con un tipo json 
+                .then(response => response.json())
+                .then(data => { //guarde los datos en una data
+                    //ahora le digo q me envie una alerta si se creo correctamente
+                    alert(data.mensaje); 
+                    //y si todo sale bien que retorne a la pagina del index
+                    window.location.href = 'AdministrarProducto.html';
+                })
+                //de lo contrario envie un error
+                .catch(error => console.error('Error:', error));
+            });
+        });
+
+
+
+
+    </script>
+</body>
+</html>
