@@ -25,10 +25,10 @@ usuarios = ModelUsuarios()
 
 @app.route('/login', methods=['POST'])
 def loginUsuario():
-    email = request.json['email']
-    password = request.json['password']
-    resultado = usuarios.verificarUsuario(email, password)
-    return jsonify({"mensaje": resultado})
+     email = request.json['email']
+     password = request.json['password']
+     resultado = usuarios.verificarUsuario(email, password)
+     return jsonify({"mensaje": resultado})
      
 
 
@@ -75,6 +75,10 @@ def eliminar_producto(id):
 @app.route('/usuarios', methods=['GET'])
 def listar_usuarios():
      return jsonify(usuarios.obtener_usuarios())
+
+@app.route('/usuario/<int:id>', methods=['GET'])
+def listar_usuario(id):
+     return jsonify(usuarios.obtener_usuario(id))
 
 @app.route('/nuevo_usuario', methods=['POST'])
 def crear_usuario():
